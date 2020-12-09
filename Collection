@@ -1,0 +1,66 @@
+//
+//  voedingsWaardenList.swift
+//  Vegan Vibes (iOS)
+//
+//  Created by Joël van Bodegraven on 08/12/2020.
+//
+
+import SwiftUI
+
+struct Row<T>: Identifiable {
+    let id = UUID.init()
+    let left: T
+    let right: T?
+}
+
+func splitInPairs<T>(from array: [T]) ->[Row<T>] {
+    var pairs: [Row<T>] = []
+    
+    for i in 0...(array.count / 2) {
+        pairs.append(Row(left: array[i], right: array[array.count - i]))
+    }
+    
+    if array.count % 2 == 1 {
+        pairs.append(Row(left: array[array.count / 2 + 1], right: nil))
+    }
+    
+    return pairs
+
+}
+
+struct voedingsWaardenList<T>: View {
+    private let pairs: [Row<T>]
+    @State var recipe: Recipe
+
+    
+    var body: some View {
+        HStack {
+            VStack(alignment: .leading) {
+                Text("Voedingswaarden")
+                    .modifier(mediumFont(size: 20))
+                    .padding(.bottom)
+          
+                ForEach(pairs, id: \.id) {row in
+                    ForEach(recipe.ingredients, id: (\.self)) { ingredient in
+                        HStack {
+                            if let right = row.right {
+                                Text(ingredient)
+                                Spacer()
+                            }
+                        }
+                    }
+            
+            }
+                    
+              
+            }
+            Spacer()
+        }.frame(maxWidth: 640).padding(.top, 16)
+    }
+}
+
+struct voedingsWaardenList_Previews: PreviewProvider {
+    static var previews: some View {
+        voedingsWaardenList<T>(pairs: [Row<Any>], recipe: recipes[0])
+    }
+}
