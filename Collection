@@ -7,25 +7,26 @@
 
 import SwiftUI
 
+// this is a row in a list
 struct Row<T>: Identifiable {
     let id = UUID.init()
     let left: T
     let right: T?
 }
 
-func splitInPairs<T>(from array: [T]) ->[Row<T>] {
+// this is a method to split `receipe.ingredients` in pairs
+func splitInPairs<T>(from array: [T]) -> [Row<T>] {
     var pairs: [Row<T>] = []
-    
+
     for i in 0...(array.count / 2) {
         pairs.append(Row(left: array[i], right: array[array.count - i]))
     }
-    
+
     if array.count % 2 == 1 {
         pairs.append(Row(left: array[array.count / 2 + 1], right: nil))
     }
-    
-    return pairs
 
+    return pairs
 }
 
 struct voedingsWaardenList: View {
@@ -41,8 +42,8 @@ struct voedingsWaardenList: View {
                 ForEach(splitInPairs(recipe.ingredients), id: \.id) { row in
                         voedingsWaarden(name: row.left)
                         if let right = row.right {
-                              voedingsWaarden(name: right)
-                              Spacer()
+                                Spacer()
+                                voedingsWaarden(name: right)
                         }
                 }.frame(maxWidth: 640).padding(.top, 16)
             }
