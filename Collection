@@ -28,34 +28,25 @@ func splitInPairs<T>(from array: [T]) ->[Row<T>] {
 
 }
 
-struct voedingsWaardenList<T>: View {
-    private let pairs: [Row<T>]
+struct voedingsWaardenList: View {
     @State var recipe: Recipe
 
-    
     var body: some View {
         HStack {
             VStack(alignment: .leading) {
                 Text("Voedingswaarden")
                     .modifier(mediumFont(size: 20))
                     .padding(.bottom)
-          
-                ForEach(pairs, id: \.id) {row in
-                    ForEach(recipe.ingredients, id: (\.self)) { ingredient in
-                        HStack {
-                            if let right = row.right {
-                                Text(ingredient)
-                                Spacer()
-                            }
+
+                ForEach(splitInPairs(recipe.ingredients), id: \.id) { row in
+                        voedingsWaarden(name: row.left)
+                        if let right = row.right {
+                              voedingsWaarden(name: right)
+                              Spacer()
                         }
-                    }
-            
+                }.frame(maxWidth: 640).padding(.top, 16)
             }
-                    
-              
-            }
-            Spacer()
-        }.frame(maxWidth: 640).padding(.top, 16)
+        }
     }
 }
 
